@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>javascript - web worker</title>
+  <script>
+    const code = `(function () {
+        self.onmessage = function (event){
+          let eData = event.data;
+          setInterval(() => {
+            eData = eData * 2;
+            self.postMessage(eData);
+          }, 500);
+        }
+      })();`;
+
+    var worker = new Worker(URL.createObjectURL(new Blob([code], { type: "text/javascript" })));
+
+    function postMessage() {
+      document.getElementById("log").innerHTML = "post message to worker : " + document.getElementById("data").value + "<br>" + document.getElementById("log").innerHTML;
+      worker.postMessage(document.getElementById("data").value);
+    }
+
+    worker.onmessage = function (event) {
+      document.getElementById("log").innerHTML = "worker response : " + event.data + "<br>" + document.getElementById("log").innerHTML;
+    };
+  </script>
+</head>
+
+<body>
+  <div>
+    <div>
+      <label> send worker (repeat number * 2) : </label>
+      <input id="data" type="number" value="1" />
+      <button onclick="postMessage()">Do</button>
+    </div>
+    <div id="log"></div>
+  </div>
+</body>
+</html>

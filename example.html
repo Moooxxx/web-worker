@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>javascript - web worker</title>
+  <script>
+    const code = `(function () {
+      self.onmessage = function (event){
+        // 接收到資料, 透過 console.log 查看.
+        console.log("worker inside get" , event.data);
+        
+        // 發送出去
+        self.postMessage('processd: ' + event.data);
+      }
+      })();`;
+
+    var worker = new Worker(URL.createObjectURL(new Blob([code], { type: "text/javascript" })));
+
+    worker.onmessage = function (event) {
+      console.log("worker outside get", event.data);
+    };
+
+    // 發送給 web worker
+    worker.postMessage(123456789);
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
